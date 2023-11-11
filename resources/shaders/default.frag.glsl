@@ -26,8 +26,6 @@ uniform sampler2D displacement0;
 // Gets the color of the light from the main function
 uniform vec4 lightColor;
 
-
-
 vec4 pointLight()
 {	
 	// used in two variables so I calculate it here to not have to do it twice

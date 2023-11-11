@@ -32,6 +32,4 @@ public:
 	);
 };
 
-// Mesh Plane(float scaleX, float scaleY, float scaleZ);
-
 #endif

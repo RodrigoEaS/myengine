@@ -79,10 +79,3 @@ void Mesh::Draw
 	// Draw the actual mesh
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 };
-/*
-Mesh Plane(float scaleX, float scaleY, float scaleZ)
-{
-	
-
-	return Mesh();
-}*/

@@ -7,7 +7,7 @@ namespace fs = std::filesystem;
 
 #include "Model.h"
 
-const unsigned int width = 1080;
+const unsigned int width = 720;
 const unsigned int height = 720;
 
 // Number of samples per pixel for MSAA
@@ -78,9 +78,9 @@ int main()
 	glViewport(0, 0, width, height);
 
 	// Generates shaders
-	Shader shaderProgram("./resources/shaders/default.vert", "./resources/shaders/default.frag", "./resources/shaders/default.geom");
-	Shader framebufferProgram("./resources/shaders/framebuffer.vert", "./resources/shaders/framebuffer.frag");
-	Shader blurProgram("./resources/shaders/framebuffer.vert", "./resources/shaders/blur.frag");
+	Shader shaderProgram("./resources/shaders/default.vert.glsl", "./resources/shaders/default.frag.glsl", "./resources/shaders/default.geom.glsl");
+	Shader framebufferProgram("./resources/shaders/framebuffer.vert.glsl", "./resources/shaders/framebuffer.frag.glsl");
+	Shader blurProgram("./resources/shaders/framebuffer.vert.glsl", "./resources/shaders/blur.frag.glsl");
 
 	// Take care of all the light related things
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -111,13 +111,6 @@ int main()
 
 	// Creates camera object
 	Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
-
-	/*
-	 * I'm doing this relative path thing in order to centralize all the resources into one folder and not
-	 * duplicate them between tutorial folders. You can just copy paste the resources from the 'Resources'
-	 * folder and then give a relative path from this folder to whatever resource you want to get to.
-	 * Also note that this requires C++17, so go to Project Properties, C/C++, Language, and select C++17
-	 */
 
 	// Prepare framebuffer rectangle VBO and VAO
 	unsigned int rectVAO, rectVBO;
@@ -315,6 +308,9 @@ int main()
 
 	// Delete all the objects we've created
 	shaderProgram.Delete();
+	blurProgram.Delete();
+	framebufferProgram.Delete();
+
 	glDeleteFramebuffers(1, &postProcessingFBO);
 	// Delete window before ending the program
 	glfwDestroyWindow(window);
