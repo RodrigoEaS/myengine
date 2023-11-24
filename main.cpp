@@ -6,6 +6,8 @@ namespace fs = std::filesystem;
 //------------------------------
 
 #include "Model.h"
+#include "FBO.h"
+#include "FBT.h"
 
 const unsigned int width = 720;
 const unsigned int height = 720;
@@ -19,31 +21,30 @@ const float gamma = 2.2f;
 // Target Frame rate
 const double frameRate = 1.0 / 60.0;
 
-float rectangleVertices[] =
-	{
-		//  Coords   // texCoords
-		1.0f, -1.0f, 1.0f, 0.0f,
-		-1.0f, -1.0f, 0.0f, 0.0f,
-		-1.0f, 1.0f, 0.0f, 1.0f,
+float rectangleVertices[] = {
+	//  Coords   // texCoords
+	1.0f, -1.0f, 1.0f, 0.0f,
+	-1.0f, -1.0f, 0.0f, 0.0f,
+	-1.0f, 1.0f, 0.0f, 1.0f,
 
-		1.0f, 1.0f, 1.0f, 1.0f,
-		1.0f, -1.0f, 1.0f, 0.0f,
-		-1.0f, 1.0f, 0.0f, 1.0f};
+	1.0f, 1.0f, 1.0f, 1.0f,
+	1.0f, -1.0f, 1.0f, 0.0f,
+	-1.0f, 1.0f, 0.0f, 1.0f};
 
 // Vertices for plane with texture
-std::vector<Vertex> vertices =
-	{
-		Vertex{glm::vec3(-1.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f)},
-		Vertex{glm::vec3(-1.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 1.0f)},
-		Vertex{glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 1.0f)},
-		Vertex{glm::vec3(1.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f)}};
+std::vector<Vertex> vertices = {
+	Vertex{glm::vec3(-1.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f)},
+	Vertex{glm::vec3(-1.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 1.0f)},
+	Vertex{glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 1.0f)},
+	Vertex{glm::vec3(1.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f)}};
 
 // Indices for plane with texture
-std::vector<GLuint> indices =
-	{
-		0, 1, 2,
-		0, 2, 3};
+std::vector<GLuint> indices = {
+	0, 1, 2,
+	0, 2, 3};
 
+/// @brief 
+/// @return 
 int main()
 {
 	// Initialize GLFW
@@ -83,18 +84,20 @@ int main()
 	Shader blurProgram("./resources/shaders/framebuffer.vert.glsl", "./resources/shaders/blur.frag.glsl");
 
 	// Take care of all the light related things
-	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	glm::vec4 lightColor = glm::vec4(0.5f, 0.0f, 0.0f, 1.0f);
 	glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
 
 	shaderProgram.Activate();
-	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
-	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
+	shaderProgram.setVec4f("lightColor", lightColor);
+	shaderProgram.setVec3f("lightPos", lightPos);
+
 	framebufferProgram.Activate();
-	glUniform1i(glGetUniformLocation(framebufferProgram.ID, "screenTexture"), 0);
-	glUniform1i(glGetUniformLocation(framebufferProgram.ID, "bloomTexture"), 1);
-	glUniform1f(glGetUniformLocation(framebufferProgram.ID, "gamma"), gamma);
+	framebufferProgram.setInt("screenTexture", 0);
+	framebufferProgram.setInt("bloomTexture", 1);
+	framebufferProgram.setFloat("gamma", gamma);
+
 	blurProgram.Activate();
-	glUniform1i(glGetUniformLocation(blurProgram.ID, "screenTexture"), 0);
+	blurProgram.setInt("screenTexture", 0);
 
 	// Enables the Depth Buffer
 	glEnable(GL_DEPTH_TEST);
@@ -113,10 +116,12 @@ int main()
 	Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
 
 	// Prepare framebuffer rectangle VBO and VAO
-	unsigned int rectVAO, rectVBO;
+	unsigned int rectVAO;
 	glGenVertexArrays(1, &rectVAO);
-	glGenBuffers(1, &rectVBO);
 	glBindVertexArray(rectVAO);
+
+	unsigned int rectVBO;
+	glGenBuffers(1, &rectVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, rectVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(rectangleVertices), &rectangleVertices, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
@@ -135,31 +140,11 @@ int main()
 	// glfwSwapInterval(0);
 
 	// Create Frame Buffer Object
-	unsigned int postProcessingFBO;
-	glGenFramebuffers(1, &postProcessingFBO);
-	glBindFramebuffer(GL_FRAMEBUFFER, postProcessingFBO);
-
+	FBO postProcessingFBO;
 	// Create Framebuffer Texture
-	unsigned int postProcessingTexture;
-	glGenTextures(1, &postProcessingTexture);
-	glBindTexture(GL_TEXTURE_2D, postProcessingTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, postProcessingTexture, 0);
-
+	FBT postProcessingTexture(width, height, 0);
 	// Create Second Framebuffer Texture
-	unsigned int bloomTexture;
-	glGenTextures(1, &bloomTexture);
-	glBindTexture(GL_TEXTURE_2D, bloomTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, bloomTexture, 0);
+	FBT bloomTexture(width, height, 1);
 
 	// Tell OpenGL we need to draw to both attachments
 	unsigned int attachments[2] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
@@ -191,21 +176,16 @@ int main()
 			std::cout << "Ping-Pong Framebuffer error: " << fboStatus << std::endl;
 	}
 
-	// Paths to textures
-	std::string parentDir = fs::current_path().string();
-	std::string diffusePath = "/resources/textures/diffuse.png";
-	std::string normalPath = "/resources/textures/normal.png";
-	std::string displacementPath = "/resources/textures/displacement.png";
-
+	// Texture for the plane
 	std::vector<Texture> textures =
 		{
-			Texture((parentDir + diffusePath).c_str(), "diffuse", 0)};
+			Texture("./resources/textures/diffuse.png", "diffuse", 0)};
 
 	// Plane with the texture
 	Mesh plane(vertices, indices, textures);
 	// Normal map for the plane
-	Texture normalMap((parentDir + normalPath).c_str(), "normal", 1);
-	Texture displacementMap((parentDir + displacementPath).c_str(), "displacement", 2);
+	Texture normalMap("./resources/textures/normal.png", "normal", 1);
+	Texture displacementMap("./resources/textures/displacement.png", "displacement", 2);
 
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
@@ -215,7 +195,7 @@ int main()
 		timeDiff = crntTime - prevTime;
 
 		// Bind the custom framebuffer
-		glBindFramebuffer(GL_FRAMEBUFFER, postProcessingFBO);
+		postProcessingFBO.Bind();
 		// Specify the color of the background
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		// Clean the back buffer and depth buffer
@@ -230,9 +210,9 @@ int main()
 
 		shaderProgram.Activate();
 		normalMap.Bind();
-		glUniform1i(glGetUniformLocation(shaderProgram.ID, "normal0"), 1);
+		shaderProgram.setInt("normal0", 1);
 		displacementMap.Bind();
-		glUniform1i(glGetUniformLocation(shaderProgram.ID, "displacement0"), 2);
+		shaderProgram.setInt("displacement0", 2);
 
 		// Draw the normal model
 		plane.Draw(shaderProgram, camera);
@@ -245,12 +225,12 @@ int main()
 		for (unsigned int i = 0; i < amount; i++)
 		{
 			glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[horizontal]);
-			glUniform1i(glGetUniformLocation(blurProgram.ID, "horizontal"), horizontal);
+			blurProgram.setInt("horizontal", horizontal);
 
 			// In the first bounc we want to get the data from the bloomTexture
 			if (first_iteration)
 			{
-				glBindTexture(GL_TEXTURE_2D, bloomTexture);
+				bloomTexture.Bind();
 				first_iteration = false;
 			}
 			// Move the data between the pingPong textures
@@ -275,7 +255,7 @@ int main()
 		glBindVertexArray(rectVAO);
 		glDisable(GL_DEPTH_TEST); // prevents framebuffer rectangle from being discarded
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, postProcessingTexture);
+		postProcessingTexture.Bind();
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, pingpongBuffer[!horizontal]);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -311,7 +291,8 @@ int main()
 	blurProgram.Delete();
 	framebufferProgram.Delete();
 
-	glDeleteFramebuffers(1, &postProcessingFBO);
+	// Delete the Custom Frame Buffer Object
+	postProcessingFBO.Delete();
 	// Delete window before ending the program
 	glfwDestroyWindow(window);
 	// Terminate GLFW before ending the program

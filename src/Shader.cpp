@@ -1,4 +1,4 @@
-#include"shaderClass.h"
+#include"Shader.h"
 
 // Reads a text file and outputs a string with everything in the text file
 std::string get_file_contents(const char* filename)
@@ -108,6 +108,32 @@ void Shader::Activate()
 void Shader::Delete()
 {
 	glDeleteProgram(ID);
+}
+
+//Set Uniform1i for the shader
+void Shader::setInt(std::string name, int value)
+{ 
+	glUniform1i(glGetUniformLocation(ID, name.c_str()), value); 
+}
+//Set Uniform1f for the shader
+void Shader::setFloat(std::string name, float value)
+{ 
+	glUniform1f(glGetUniformLocation(ID, name.c_str()), value); 
+}
+//Set Uniform2f for the shader
+void Shader::setVec2f(std::string name, glm::vec2 value)
+{ 
+	glUniform2f(glGetUniformLocation(ID, name.c_str()), value.x, value.y); 
+}
+//Set Uniform3f for the shader
+void Shader::setVec3f(std::string name, glm::vec3 value)
+{ 
+	glUniform3f(glGetUniformLocation(ID, name.c_str()), value.x, value.y, value.z); 
+}
+//Set Uniform4f for the shader
+void Shader::setVec4f(std::string name, glm::vec4 value)
+{ 
+	glUniform4f(glGetUniformLocation(ID, name.c_str()), value.x, value.y, value.z, value.w); 
 }
 
 // Checks if the different Shaders have compiled properly

@@ -76,6 +76,7 @@
         "xtree": "cpp",
         "xutility": "cpp",
         "random": "cpp",
-        "cerrno": "cpp"
+        "cerrno": "cpp",
+        "*.rh": "cpp"
     }
 }
