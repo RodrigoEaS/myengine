@@ -1,10 +1,10 @@
-#ifndef TEXTURE_CLASS_H
-#define TEXTURE_CLASS_H
+#ifndef TEXTURE_CLASS_HPP
+#define TEXTURE_CLASS_HPP
 
 #include<glad/glad.h>
 #include<stb/stb_image.h>
 
-#include"Shader.h"
+#include"Nuclear/Shader.hpp"
 
 class Texture
 {

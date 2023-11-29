@@ -5,9 +5,9 @@
 namespace fs = std::filesystem;
 //------------------------------
 
-#include "Model.h"
-#include "FBO.h"
-#include "FBT.h"
+#include"Nuclear/Object/Mesh.hpp"
+#include"Nuclear/FrameBuffer/FBO.hpp"
+#include"Nuclear/FrameBuffer/FBT.hpp"
 
 const unsigned int width = 720;
 const unsigned int height = 720;
@@ -101,10 +101,8 @@ int main()
 
 	// Enables the Depth Buffer
 	glEnable(GL_DEPTH_TEST);
-
 	// Enables Multisampling
 	glEnable(GL_MULTISAMPLE);
-
 	// Enables Cull Facing
 	glEnable(GL_CULL_FACE);
 	// Keeps front faces
@@ -151,18 +149,21 @@ int main()
 	glDrawBuffers(2, attachments);
 
 	// Error checking framebuffer
-	auto fboStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	GLenum fboStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 	if (fboStatus != GL_FRAMEBUFFER_COMPLETE)
 		std::cout << "Post-Processing Framebuffer error: " << fboStatus << std::endl;
 
 	// Create Ping Pong Framebuffers for repetitive blurring
 	unsigned int pingpongFBO[2];
-	unsigned int pingpongBuffer[2];
 	glGenFramebuffers(2, pingpongFBO);
+
+	unsigned int pingpongBuffer[2];
 	glGenTextures(2, pingpongBuffer);
+	
 	for (unsigned int i = 0; i < 2; i++)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[i]);
+
 		glBindTexture(GL_TEXTURE_2D, pingpongBuffer[i]);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);

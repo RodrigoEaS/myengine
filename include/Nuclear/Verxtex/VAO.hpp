@@ -1,8 +1,8 @@
-#ifndef VAO_CLASS_H
-#define VAO_CLASS_H
+#ifndef VAO_CLASS_HPP
+#define VAO_CLASS_HPP
 
 #include<glad/glad.h>
-#include"VBO.h"
+#include"Nuclear/Verxtex/VBO.hpp"
 
 class VAO
 {

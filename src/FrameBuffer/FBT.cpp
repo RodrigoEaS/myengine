@@ -1,4 +1,4 @@
-#include"FBT.h"
+#include"Nuclear/FrameBuffer/FBT.hpp"
 
 // Frame Buffer Object Class
 FBT::FBT(const unsigned int width, const unsigned int height, GLuint slot){

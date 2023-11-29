@@ -1,5 +1,5 @@
-#ifndef FBT_CLASS_H
-#define FBT_CLASS_H
+#ifndef FBT_CLASS_HPP
+#define FBT_CLASS_HPP
 
 #include<glad/glad.h>
 #include<GLFW/glfw3.h>
@@ -16,6 +16,8 @@ public:
 
     // Bind the Frame Buffer Texture
     void Bind();
+
+    
 };
 
 #endif

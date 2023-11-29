@@ -1,5 +1,5 @@
-#ifndef CAMERA_CLASS_H
-#define CAMERA_CLASS_H
+#ifndef CAMERA_CLASS_HPP
+#define CAMERA_CLASS_HPP
 
 #include<glad/glad.h>
 #include<GLFW/glfw3.h>
@@ -9,7 +9,7 @@
 #include<glm/gtx/rotate_vector.hpp>
 #include<glm/gtx/vector_angle.hpp>
 
-#include"Shader.h"
+#include"Nuclear/Shader.hpp"
 
 class Camera
 {

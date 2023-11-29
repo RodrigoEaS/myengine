@@ -1,5 +1,5 @@
-#ifndef FBO_CLASS_H
-#define FBO_CLASS_H
+#ifndef FBO_CLASS_HPP
+#define FBO_CLASS_HPP
 
 #include<glad/glad.h>
 #include<GLFW/glfw3.h>

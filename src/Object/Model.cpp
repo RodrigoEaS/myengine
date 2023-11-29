@@ -1,4 +1,4 @@
-#include"Model.h"
+/*#include"Nuclear/Object/Model.hpp"
 
 Model::Model(const char* file)
 {
@@ -328,4 +328,4 @@ std::vector<glm::vec4> Model::groupFloatsVec4(std::vector<float> floatVec)
 		vectors.push_back(glm::vec4(floatVec[i++], floatVec[i++], floatVec[i++], floatVec[i++]));
 	}
 	return vectors;
-}
+}*/

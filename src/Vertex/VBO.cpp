@@ -1,4 +1,4 @@
-#include"VBO.h"
+#include"Nuclear/Verxtex/VBO.hpp"
 
 // Constructor that generates a Vertex Buffer Object and links it to vertices
 VBO::VBO(std::vector<Vertex>& vertices)

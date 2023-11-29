@@ -1,4 +1,4 @@
-#include "Camera.h"
+#include "Nuclear/Object/Camera/Camera.hpp"
 
 Camera::Camera(int width, int height, glm::vec3 position)
 {

@@ -1,5 +1,5 @@
-#ifndef SHADER_CLASS_H
-#define SHADER_CLASS_H
+#ifndef SHADER_CLASS_HPP
+#define SHADER_CLASS_HPP
 
 #include<glad/glad.h>
 #include<glm/glm.hpp>

@@ -1,12 +1,12 @@
-#ifndef MESH_CLASS_H
-#define MESH_CLASS_H
+#ifndef MESH_CLASS_HPP
+#define MESH_CLASS_HPP
 
 #include<string>
 
-#include"VAO.h"
-#include"EBO.h"
-#include"Camera.h"
-#include"Texture.h"
+#include"Nuclear/Verxtex/VAO.hpp"
+#include"Nuclear/EBO.hpp"
+#include"Nuclear/Object/Camera/Camera.hpp"
+#include"Nuclear/Texture.hpp"
 
 class Mesh
 {

@@ -1,4 +1,4 @@
-#include "Mesh.h"
+#include "Nuclear/Object/Mesh.hpp"
 
 Mesh::Mesh(std::vector <Vertex>& vertices, std::vector <GLuint>& indices, std::vector <Texture>& textures)
 {

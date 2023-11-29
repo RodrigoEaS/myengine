@@ -1,4 +1,4 @@
-#include"Texture.h"
+#include"Nuclear/Texture.hpp"
 
 Texture::Texture(const char* image, const char* texType, GLuint slot)
 {

@@ -1,4 +1,4 @@
-#include "FBO.h"
+#include "Nuclear/FrameBuffer/FBO.hpp"
 
 // Frame Buffer Object Class
 FBO::FBO()

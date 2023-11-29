@@ -25,7 +25,6 @@ set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/glfw)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/glad)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/glm)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/json-cpp)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/stb)
 
 #CREATE THE EXECUTABLE
@@ -35,7 +34,6 @@ add_executable(${PROJECT_NAME} main.cpp ${SRC_FILES})
 target_link_libraries(${PROJECT_NAME} PUBLIC ${OPENGL_LIBRARIES} glfw)
 target_link_libraries(${PROJECT_NAME} PUBLIC glad)
 target_link_libraries(${PROJECT_NAME} PUBLIC glm)
-target_link_libraries(${PROJECT_NAME} PUBLIC json-cpp)
 target_link_libraries(${PROJECT_NAME} PUBLIC stb)
 
 #ADD HEADERS FILES
